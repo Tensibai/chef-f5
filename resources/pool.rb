@@ -9,7 +9,7 @@ property :load_balancer, String, regex: /.*/, default: 'default'
 property :lb_host, String
 property :lb_username, String
 property :lb_password, String
-property :partition, String, default: '/Common/'
+property :partition, String, default: 'Common'
 property :enabled_status, [:manual, :enabled, :disabled], default: node['f5']['enabled_status']
 
 create_node = proc do
@@ -27,11 +27,11 @@ create_node = proc do
   end
   if new_resource.enabled_status != :manual
     current_enabled_status = @f5.node_is_enabled?(new_resource.host)
-    if (new_resource.enabled_status == :disabled && current_enabled_status == true)
+    if new_resource.enabled_status == :disabled && current_enabled_status == true
       converge_by("Disabling '#{new_resource.host}' (was previously enabled)") do
         @f5.node_disable(new_resource.host)
       end
-    elsif (new_resource.enabled_status == :enabled && current_enabled_status == false)
+    elsif new_resource.enabled_status == :enabled && current_enabled_status == false
       converge_by("Enabling '#{new_resource.host}' (was previously disabled)") do
         @f5.node_enable(new_resource.host)
       end

@@ -2,7 +2,7 @@ require_relative './base_client'
 module ChefF5
   class Client < BaseClient
     unless defined? LB_METHOD_TYPES
-      LB_METHOD_TYPES = %w[
+      LB_METHOD_TYPES = %w(
         LB_METHOD_ROUND_ROBIN
         LB_METHOD_RATIO_MEMBER
         LB_METHOD_LEAST_CONNECTION_MEMBER
@@ -24,7 +24,7 @@ module ChefF5
         LB_METHOD_RATIO_SESSION
         LB_METHOD_RATIO_LEAST_CONNECTION_MEMBER
         LB_METHOD_RATIO_LEAST_CONNECTION_NODE_ADDRESS
-      ].freeze
+      ).freeze
     end
 
     def node_is_missing?(name)
@@ -59,7 +59,6 @@ module ChefF5
     end
 
     def pool_is_missing?(name)
-      Chef::Log.warn "Folder is: #{api.System.Session.get_active_folder}"
       response = api.LocalLB.Pool.get_list
 
       return true if response[:item].nil?
@@ -97,15 +96,15 @@ module ChefF5
                                                    { pool_name: pool,
                                                      monitor_rule: {
                                                        monitor_templates: {
-                                                         item: monitor
+                                                         item: monitor,
                                                        },
                                                        quorum: '0',
                                                        # this value is overridden if an array of monitors
                                                        # are passed in. Instead it is set to
                                                        # `MONITOR_RULE_TYPE_AND_LIST`
-                                                       type: 'MONITOR_RULE_TYPE_SINGLE'
-                                                     } }
-                                                 ]
+                                                       type: 'MONITOR_RULE_TYPE_SINGLE',
+                                                     } },
+                                                 ],
                                                })
     end
 

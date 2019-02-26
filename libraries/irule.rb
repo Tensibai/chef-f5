@@ -2,14 +2,14 @@ require_relative './base_client'
 
 module ChefF5
   class IRule < BaseClient
-    def is_missing?(name)
+    def missing?(name)
+      Chef::Log.warn 'Within missing'
       !api.LocalLB.Rule.get_list[:item].include?(with_partition(name))
     end
 
     def create(name, definition)
-      api.LocalLB.Rule.create(rules: {
-        item: [{ rule_name: with_partition(name), rule_definition: definition }]
-      })
+      Chef::Log.warn 'Within create'
+      api.LocalLB.Rule.create(rules: { item: [{ rule_name: with_partition(name), rule_definition: definition }] })
     end
 
     def definition_changed?(name, definition)
@@ -18,9 +18,7 @@ module ChefF5
     end
 
     def update_definition(name, definition)
-      api.LocalLB.Rule.modify_rule(rules: {
-        item: [{ rule_name: with_partition(name), rule_definition: definition }]
-      })
+      api.LocalLB.Rule.modify_rule(rules: { item: [{ rule_name: with_partition(name), rule_definition: definition }] })
     end
 
     def destroy(name)
