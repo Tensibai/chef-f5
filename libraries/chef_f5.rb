@@ -32,7 +32,7 @@ module ChefF5
 
       return true if response[:item].nil?
 
-      Array(response[:item]).grep(/#{with_partition name}/).empty?
+      Array(response[:item]).grep(/#{with_partition name}$/).empty?
     end
 
     def node_is_enabled?(name)
@@ -59,14 +59,13 @@ module ChefF5
     end
 
     def pool_is_missing?(name)
-      Chef::Log.warn "Folder is: #{api.System.Session.get_active_folder}"
       response = api.LocalLB.Pool.get_list
 
       return true if response[:item].nil?
 
       pools = response[:item]
 
-      Array(pools).grep(/#{with_partition name}/).empty?
+      Array(pools).grep(/#{with_partition name}$/).empty?
     end
 
     def pool_is_missing_node?(pool, node)
@@ -77,7 +76,7 @@ module ChefF5
 
       members = [members] if members.is_a? Hash
 
-      members.map { |m| m[:address] }.grep(/#{with_partition node}/).empty?
+      members.map { |m| m[:address] }.grep(/#{with_partition node}$/).empty?
     end
 
     def pool_is_missing_monitor?(pool, monitor)
